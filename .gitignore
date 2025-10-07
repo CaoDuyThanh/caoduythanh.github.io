@@ -1,0 +1,26 @@
+# === Jekyll build ===
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# === Bundler / Ruby ===
+vendor/
+.bundle/
+Gemfile.lock
+
+# === System / Editor files ===
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.bak
+*.tmp
+
+# === Node (if using JS/CSS tooling) ===
+node_modules/
+package-lock.json
+yarn.lock
+
+# === Environment / credentials ===
+.env
