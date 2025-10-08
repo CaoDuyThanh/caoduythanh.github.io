@@ -3,6 +3,8 @@ icon: fas fa-tags
 order: 5
 ---
 
+[PDF](/assets/files/CV.pdf)
+
 # MY OBJECTIVE
 
 I want to use the knowledge of machine learning to help automate human tasks in every aspect of life.
