@@ -1,5 +1,7 @@
 ---
+title: Curriculum Vitae
 icon: fas fa-tags
+tags: [CV]
 order: 5
 ---
 
@@ -17,18 +19,18 @@ I want to use the knowledge of machine learning to help automate human tasks in 
 
 # WORK EXPERIENCE
 
-## ZMP Vietnam (2021 – Now)
+## ZMP Vietnam (2020 – Present)
 
-**Model Predictive Control (2024 – Now)**
+**Model Predictive Control (2024 – Present)**
 - Add constraint for robot's head inside the drivable area.
 
-**Path Generation service (2021 – 2024)**
+**Path Generation service (2020 – 2024)**
 - Build API to store map data that supports for generating global path for autonomous robot.
 - Build high performance module to generate reference map files (similar to Google maps).
 - Add module to generate Euclidean Distance Transform in parallel.
 - Mainly using C++, python, rust,...
 
-## Hiip – Influencer Marketing Platform (2018 – 2021)
+## Hiip – Influencer Marketing Platform (2018 – 2020)
 
 **Crawling & Analyze service**
 - Build scalable crawler system to gather data of million users from Social Network: Facebook, Instagram, Youtube and Blog.
