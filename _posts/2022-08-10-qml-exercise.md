@@ -18,7 +18,7 @@ QML allows you to describe UI declaratively — instead of manually updating lay
 
 For example, a basic rectangle with animation looks like this:
 
-```yaml
+```qml
 Rectangle {
     width: 200; height: 100
     color: "skyblue"
