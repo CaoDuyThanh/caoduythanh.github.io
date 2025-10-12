@@ -24,6 +24,16 @@
 ## Prerequisite
 - Ruby 3.4+
 
+## Add your new articles?
+
+### Sidebar
+
+If you want your page is attached to the sidebar (like CV page), put it in the `_tabs` folder.
+
+### New article in collection
+
+If you want to create a new article, put it in folder `_posts`. The article has this format `<year>-<month>-<date>-<title>.md`. It will create a nice timeline using the datetime information.
+
 ## How to build?
 
 To build the static site using Jekyll, you need to install bundle, dependencies
@@ -39,5 +49,3 @@ Then build Jekyll and start the site
 bundle exec jekyll build
 bundle exec jekyll serve --watch
 ```
-
-
