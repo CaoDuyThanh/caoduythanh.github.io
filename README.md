@@ -16,6 +16,7 @@
 
 ## Prerequisite
 - Ruby 3.4+
+- Node 20+
 
 ## Add your new articles?
 
@@ -28,6 +29,25 @@ If you want your page is attached to the sidebar (like CV page), put it in the `
 If you want to create a new article, put it in folder `_posts`. The article has this format `<year>-<month>-<date>-<title>.md`. It will create a nice timeline using the datetime information.
 
 ## How to build?
+
+First you need to install all npm packages and build source to generate the minimal `js` files. Notes: the build require Nodejs 20+.
+
+```bash
+$ npm install
+$ npm run build
+```
+
+After install, you will see it build something like theses on terminal:
+
+```bash
+[js] _javascript/commons.js → assets/js/dist/commons.min.js...
+[js] created assets/js/dist/commons.min.js in 2.3s
+[js] 
+[js] _javascript/home.js → assets/js/dist/home.min.js...
+[js] created assets/js/dist/home.min.js in 1.2s
+[js] 
+...
+```
 
 To build the static site using Jekyll, you need to install bundle, dependencies
 
