@@ -1,0 +1,137 @@
+<!-- sidebar-bear-switch: show existing avatar on load; after a delay replace it with a randomly chosen bear sprite cell -->
+<style>
+  /* keep styles minimal and scoped */
+  .sidebar-bear {
+    display: inline-block;
+    /* use the 3x3 raster sprite (bear_1). We'll compute pixel-based background-size/position in JS */
+    background-image: url('{{ "/assets/img/profile/bear_1.jpg" | relative_url }}');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    overflow: hidden;
+  }
+</style>
+
+<script>
+(function(){
+  try {
+  // Using the raster sprite `bear_1` which is a 3x3 grid per your note.
+  var cols = 3, rows = 3, total = cols * rows;
+    // Delay before switching the avatar (in milliseconds).
+    // Can be configured in `_config.yml` using either `bear_switch_delay_ms` (milliseconds)
+    // or `bear_switch_delay_seconds` (seconds). Defaults to 60 seconds.
+    {% if site.bear_switch_delay_ms %}
+      var delayMs = {{ site.bear_switch_delay_ms }};
+    {% else %}
+      var delayMs = {{ site.bear_switch_delay_seconds | default: 60 }} * 1000;
+    {% endif %}
+
+    var avatarAnchor = document.getElementById('avatar');
+    if (!avatarAnchor) return;
+
+  // Determine the display slot size from the avatar anchor's computed CSS size so the replacement matches
+  // the CSS `rem`-based value (e.g. 7rem). Use getComputedStyle width/height first, fall back to clientWidth.
+  var img = avatarAnchor.querySelector('img');
+  var cs = window.getComputedStyle(avatarAnchor);
+  var slotW = parseFloat(cs && cs.width) || avatarAnchor.clientWidth || (img && img.getAttribute('width') ? parseInt(img.getAttribute('width'), 10) : 112);
+  var slotH = parseFloat(cs && cs.height) || avatarAnchor.clientHeight || (img && img.getAttribute('height') ? parseInt(img.getAttribute('height'), 10) : slotW);
+
+    // Make sure the anchor doesn't collapse when its contents are replaced
+    avatarAnchor.style.display = avatarAnchor.style.display || 'inline-block';
+
+    // After the delay, replace the avatar with a randomly selected bear sprite cell
+    setTimeout(function(){
+      try {
+        var idx = Math.floor(Math.random() * total);
+        var col = idx % cols;
+        var row = Math.floor(idx / cols);
+
+        // Create bear element
+        var d = document.createElement('div');
+        d.className = 'sidebar-bear';
+        d.setAttribute('data-index', idx);
+        d.setAttribute('title', 'Bear icon #' + idx);
+
+        // Load the raster sprite to compute exact sprite dimensions
+        var sprite = new Image();
+        // NOTE: repository contains `bear_1.png` — using that. If you really have `bear_1.jpg` change the path above.
+        sprite.src = '{{ "/assets/img/profile/bear_1.jpg" | relative_url }}';
+        sprite.onload = function() {
+          try {
+            var nw = sprite.naturalWidth || sprite.width || 0;
+            var nh = sprite.naturalHeight || sprite.height || 0;
+            if (nw > 0 && nh > 0) {
+              // The user reported each icon is 330x330 px — prefer that known cell size when reasonable.
+              var expectedCellW = 330, expectedCellH = 330;
+              var actualCellW = nw / cols;
+              var actualCellH = nh / rows;
+              var cellW = expectedCellW;
+              var cellH = expectedCellH;
+              // If actual cell size differs significantly, use actual values instead
+              if (Math.abs(actualCellW - expectedCellW) > 2 || Math.abs(actualCellH - expectedCellH) > 2) {
+                cellW = actualCellW;
+                cellH = actualCellH;
+              }
+
+              // Scale the sprite so the cell fills the avatar slot (scale up or down as needed)
+              var scaleX = slotW / cellW;
+              var scaleY = slotH / cellH;
+              var scale = Math.min(scaleX, scaleY);
+              // Small visual boost so the bear appears slightly bigger than the slot (configurable)
+              // Default to 1.00 so it matches the CSS slot exactly unless configured otherwise.
+              var scaleBoost = {{ site.bear_scale | default: 1.0 | jsonify }};
+              scale = scale * scaleBoost;
+              // Don't exceed a reasonable cap (e.g., 1.25x the slot) to avoid layout overflow
+              var cap = 1.25;
+              if (scale > cap) scale = cap;
+
+              var displayW = Math.max(1, Math.round(cellW * scale));
+              var displayH = Math.max(1, Math.round(cellH * scale));
+
+              // Set pixel background-size so each cell maps exactly at the chosen scale
+              d.style.backgroundSize = Math.round(nw * scale) + 'px ' + Math.round(nh * scale) + 'px';
+              d.style.width = displayW + 'px';
+              d.style.height = displayH + 'px';
+
+              // Use pixel offsets for precise cropping (negative offsets)
+              var offsetX = Math.round(-col * cellW * scale);
+              var offsetY = Math.round(-row * cellH * scale);
+              d.style.backgroundPosition = offsetX + 'px ' + offsetY + 'px';
+
+              // Replace anchor contents and insert bear
+              avatarAnchor.innerHTML = '';
+              avatarAnchor.appendChild(d);
+              return;
+            }
+          } catch (e) { /* fallthrough to fallback below */ }
+
+          // Fallback: if sprite details not available, use percentage positioning and original size
+          var x = (cols === 1) ? 50 : (col / (cols - 1)) * 100;
+          var y = (rows === 1) ? 50 : (row / (rows - 1)) * 100;
+          d.style.width = slotW + 'px';
+          d.style.height = slotH + 'px';
+          d.style.backgroundPosition = x + '% ' + y + '%';
+          avatarAnchor.innerHTML = '';
+          avatarAnchor.appendChild(d);
+        };
+        sprite.onerror = function() {
+          // fallback to percentage method if loading fails
+          var x = (cols === 1) ? 50 : (col / (cols - 1)) * 100;
+          var y = (rows === 1) ? 50 : (row / (rows - 1)) * 100;
+          d.style.width = slotW + 'px';
+          d.style.height = slotH + 'px';
+          d.style.backgroundPosition = x + '% ' + y + '%';
+          avatarAnchor.innerHTML = '';
+          avatarAnchor.appendChild(d);
+        };
+
+      } catch (e) {
+        console.error && console.error('sidebar-bear-switch replacement error', e);
+      }
+    }, delayMs);
+
+  } catch (e) {
+    console.error && console.error('sidebar-bear-switch init error', e);
+  }
+})();
+</script>

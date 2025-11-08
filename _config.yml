@@ -81,7 +81,7 @@ theme_mode: light # [light | dark]
 # will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-# cdn: "https://chirpy-img.netlify.app"
+# cdn: "http://localhost"
 cdn: "https://caoduythanh.github.io"
 
 # the avatar on sidebar, support local or CORS resources
@@ -138,6 +138,9 @@ paginate: 10
 
 # The base URL of your site
 baseurl: ""
+
+# show the bear after 60 seconds (default)
+bear_switch_delay_seconds: 60
 
 # ------------ The following options are not recommended to be modified ------------------
 
