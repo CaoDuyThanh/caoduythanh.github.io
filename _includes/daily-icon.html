@@ -1,0 +1,86 @@
+<!-- Daily icon: shows one cell from a 3x4 sprite (bear_2.jpg) based on current date -->
+<div id="daily-icon" aria-hidden="true"></div>
+
+<style>
+  /* Small floating icon. Default smaller size; JS will auto-size to sprite cell but clamp to maxSize. */
+  :root { --daily-icon-max-size: 48px; }
+  #daily-icon {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    width: 40px; /* default small size until auto-size runs */
+    height: 40px;
+    background-image: url('{{ "/assets/img/profile/bear_2.svg" | relative_url }}');
+    /* sprite: 3 columns, 4 rows => background-size = 300% 400% */
+    background-size: 300% 400%;
+    background-position: 0% 0%;
+    background-repeat: no-repeat;
+    /* no border radius as requested (no rounded border) */
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    z-index: 9999;
+    cursor: default;
+    display: inline-block;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  @media (max-width: 576px) {
+    #daily-icon { right: 8px; bottom: 8px; width: 48px; height: 48px; }
+  }
+</style>
+
+<script>
+  (function(){
+    try {
+  var cols = 3, rows = 4, total = cols * rows;
+  // maximum displayed size in px (will clamp auto-sized cell)
+  var maxSize = 48;
+      var d = new Date();
+      // YYYY-MM-DD deterministic seed per date
+      var dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+
+      // small hash function (deterministic): sum of char codes with bit operations
+      var h = 0;
+      for (var i = 0; i < dateStr.length; i++) {
+        h = (h << 5) - h + dateStr.charCodeAt(i);
+        h |= 0;
+      }
+
+      var idx = Math.abs(h) % total;
+      var col = idx % cols;
+      var row = Math.floor(idx / cols);
+
+      // For background-size of (cols*100%) (rows*100%), positions should be spaced across 0..100%
+      var x = (cols === 1) ? 50 : (col / (cols - 1)) * 100;
+      var y = (rows === 1) ? 50 : (row / (rows - 1)) * 100;
+
+      var el = document.getElementById('daily-icon');
+      if (el) {
+        el.style.backgroundPosition = x + '% ' + y + '%';
+        el.setAttribute('data-index', idx);
+        el.setAttribute('title', 'Daily icon #' + idx + ' — ' + dateStr);
+
+        // Auto-size the element to one sprite cell by loading the full image and dividing
+        var img = new Image();
+        img.src = '{{ "/assets/img/profile/bear_2.svg" | relative_url }}';
+        img.onload = function() {
+          try {
+            var cellW = Math.round(img.naturalWidth / cols);
+            var cellH = Math.round(img.naturalHeight / rows);
+            // Only set explicit pixel size if the computed cell size looks reasonable
+            if (cellW > 0 && cellH > 0) {
+              // clamp to maxSize so the icon stays small
+              var w = Math.min(cellW, maxSize);
+              var h = Math.min(cellH, maxSize);
+              el.style.width = w + 'px';
+              el.style.height = h + 'px';
+            }
+          } catch (e) { /* ignore */ }
+        };
+      }
+    } catch (e) {
+      // fail silently if script errors
+      console.error && console.error('daily-icon error', e);
+    }
+  })();
+</script>
