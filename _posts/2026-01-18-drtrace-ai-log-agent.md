@@ -22,7 +22,7 @@ Once integrated into your application stack, you can ask DrTrace questions like 
 
 A typical DrTrace answer looks like this:
 
-```bash
+```
 Q: Hey, I see a spike in errors around 10:15 AM. What happened?
 A: Between 10:14:50 and 10:15:30, there were 150 timeout errors in the PaymentService module. This coincides with a surge in user requests due to a marketing campaign. The root cause appears to be an unhandled exception in the process_payment() function when the database connection pool is exhausted. Suggested fix: implement retry logic with exponential backoff and increase the pool size.
 ```
