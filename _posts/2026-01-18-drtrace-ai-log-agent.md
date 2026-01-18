@@ -10,7 +10,7 @@ math: true
 mermaid: true
 ---
 
-Have you ever spent hours manually sifting through thousands of log lines to find a single point of failure? Often the logs aren't sufficient to explain the issue, so you add more logging, rerun the application, and search again. That's frustrating and time-consuming so I created DrTrace.
+Have you ever spent hours manually sifting through thousands of log lines to find a single point of failure? Often the logs aren't sufficient to explain the issue, so you add more logging, rerun the application, and search again. That's frustrating and time-consuming, so I created DrTrace.
 
 **DrTrace** (short for **Doctor Trace**) is an AI-first system that transforms raw logs into concise, actionable explanations—so you can spend time fixing problems, not searching for them.
 
@@ -18,7 +18,7 @@ Have you ever spent hours manually sifting through thousands of log lines to fin
 
 DrTrace is more than a logging library. It combines structured logging, source-code context, and AI analysis into a single workflow that surfaces root causes and suggested fixes.
 
-Imagine once you integrated it into your application stack. You can ask DrTrace questions like "What caused the error between 09:00–10:00?" and receive a focused explanation with links to relevant code paths.
+Once integrated into your application stack, you can ask DrTrace questions like "What caused the error between 09:00–10:00?" and receive a focused explanation with links to relevant code paths.
 
 A typical DrTrace answer looks like this:
 
@@ -88,7 +88,7 @@ graph TD
 and the process when using DrTrace looks like this:
 1. Install DrTrace SDK in your application (Python/C++).
 2. Start the DrTrace log server and API to collect logs.
-3. Use DrTrace `log-init` agent to skim your project and suggest the integration DrTrace into your codebase.
+3. Use the DrTrace `log-init` agent to scan your project and suggest how to integrate DrTrace into your codebase.
 4. Use DrTrace `log-it` agent to add strategic log entries with context.
 5. Run your application as usual; logs are sent to the DrTrace intelligence server.
 6. Use DrTrace `log-analysis` agent to ask questions and get explanations about log patterns.
@@ -139,9 +139,9 @@ then answer a few questions about your application:
 ✔ Select agent framework: › bmad
 ```
 
-This will create folder `_drtrace` with configuration and agents that can help you instrument logging and analyze logs later.
+This creates a `_drtrace` folder with configuration and agents that help you instrument logging and analyze logs later.
 
-Then pull the source from [Github](https://github.com/CaoDuyThanh/drtrace.git) and start DrTrace server for logging:
+Then pull the source from [GitHub](https://github.com/CaoDuyThanh/drtrace.git) and start the DrTrace server for logging:
 
 ```bash
 docker-compose up -d
@@ -161,7 +161,7 @@ logger.info("This log is now AI-enriched")
 
 Or if you are not sure how to integrate DrTrace into your codebase, you can use the `_drtrace/agents/log-init.md` agent to scan your project and suggest places to add logging:
 
-Once you setup DrTrace logging, run your application as usual. Logs will be sent asynchronously to the DrTrace server.
+Once you set up DrTrace logging, run your application as usual. Logs will be sent asynchronously to the DrTrace server.
 
 When you notice an issue, use the `_drtrace/agents/log-analysis.md` agent to ask questions about log patterns:
 
@@ -169,12 +169,14 @@ When you notice an issue, use the `_drtrace/agents/log-analysis.md` agent to ask
 drtrace analyze --question "What caused the spike in errors between 10:00 and 11:00?"
 ```
 
-and that's it!
+And that's it.
 
 ## Final thoughts
 
 DrTrace aims to bridge the gap between raw data and true understanding by creating a workflow that helps AI agents and engineers extract useful system insights from logs. By automating correlation and providing concise explanations, DrTrace helps teams identify root causes faster and ship fixes with confidence.
 
-## Analogy
+## What's next?
 
-Think of DrTrace as an experienced lead developer standing beside you while you debug: instead of reading thousands of log lines, you ask a single question and get a direct answer with a suggested fix.
+DrTrace is still in early development and does not yet have enough context to produce fully accurate analyses. Accurate results require both source-code context and runtime traces, so I will work on an additional tool for context analysis. See you in the next post!
+
+**Repo**: [DrTrace (GitHub)](https://github.com/CaoDuyThanh/drtrace).
